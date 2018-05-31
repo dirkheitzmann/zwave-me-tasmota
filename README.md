@@ -8,7 +8,8 @@ Tasmota Firmware into the z-wave-me HomeAutomation Solution (z-Way).
 
 Currently tested using Sonoff S20 and Sonoff POW.
 
-- Installation
+### Installation
+
 For the installation, download and extract the sourcecode and copy the 
 content to /opt/z-way-server/automation/modules (or .../usermodules ) on 
 the Z-WAY-Server.
@@ -23,7 +24,8 @@ andere unter der Tasmota Firmware in die z-wave-me HomeAutomation (z-Way).
 
 Derzeit getestet mit Sonoff S20 und Sonoff POW.
 
-- Installation
+### Installation
+
 Zur Installation den Sourcecode runterladen und auf dem Z-WAY-Server unter 
 /opt/z-way-server/automation/modules ablegen (oder ...(usermodules).
 
