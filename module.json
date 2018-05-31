@@ -1,0 +1,47 @@
+{
+    "singleton": false,
+    "dependencies": [],
+    "category": "wifiplug",
+    "author": "Dirk Heitzmann (creativeit.eu)",
+    "homepage": "http://www.creativeit.eu",
+    "state": null,
+    "icon": "icon.png",
+    "moduleName":"Tasmota",
+    "version": "1.0.0",
+    "maturity": "stable",
+    "repository": {
+            "type": "git",
+            "source": "https://github.com/dirkheitzmann/zwave-me-tasmota"
+    },
+    "defaults": {
+        "title": "__m_title__",
+        "description": "__m_descr__",
+	"url": ""
+    },
+    "schema": {
+        "type": "object",
+        "properties": {
+            "url": {
+                "required": true
+            },
+            "password": {
+                "required": false
+            }
+        },
+        "required": false
+    },
+    "options": {
+        "fields": {
+            "url": {
+                "label": "__ip__",
+				"helper": "__h_ip__",                
+                "required": true
+            },
+            "password": {
+                "label": "__password__",
+				"helper": "__h_password__",                
+                "required": false
+            }
+        }
+    }
+}

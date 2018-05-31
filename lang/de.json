@@ -1,0 +1,8 @@
+{
+	"m_title":"Tasmota Switch (WifiPlug)",
+	"m_descr":"Diese App ermöglicht Ihnen die Steuerung Ihrer WLAN Steckdose mit der Tasmota-Firmware. Geben Sie dazu einfach die IP-Adresse der komplett eingerichteten WLAN Steckdose an.",
+	"ip":"IP-Adresse des Schalters",
+	"h_ip":"Beispielformat: '192.168.0.50'",
+	"password":"Password des Schalters",
+	"h_password":"Falls ein Passwort auf dem Device konfiguriert ist, ansonsten leer"
+}

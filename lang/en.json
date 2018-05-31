@@ -1,0 +1,8 @@
+{
+	"m_title":"Tasmota Switch (WifiPlug)",
+	"m_descr":"This app allows you to control your WLAN plugs running Tosmota Firmware. Simply enter the IP address of the completely configured WLAN plug.",
+	"ip":"Plug IP URL",
+	"h_ip":"in the format '192.168.0.50'",
+	"password":"Password of the Switch",
+	"h_password":"If Password is configured, else should be empty"
+}
