@@ -4,5 +4,9 @@
 	"ip":"IP-Adresse des Schalters",
 	"h_ip":"Beispielformat: '192.168.0.50'",
 	"password":"Password des Schalters",
-	"h_password":"Falls ein Passwort auf dem Device konfiguriert ist, ansonsten leer"
+	"h_password":"Falls ein Passwort auf dem Device konfiguriert ist, ansonsten leer",
+	"rl_sensorAvailable":"Sensor angeschlossen",
+	"h_sensorAvailable":"Falls ein Sensor integriert ist, werden die entsprechenden Devices automatisch angelegt."
+	"sensorInterval":"Sensor Update Interval",
+	"h_sensorInterval":"Sensordaten werden in diesem Interval aktuallisiert (in Sekunden, Default ist 60s)."
 }

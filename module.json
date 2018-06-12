@@ -7,7 +7,7 @@
     "state": null,
     "icon": "icon.png",
     "moduleName":"Tasmota",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "maturity": "stable",
     "repository": {
             "type": "git",
@@ -16,15 +16,26 @@
     "defaults": {
         "title": "__m_title__",
         "description": "__m_descr__",
-	"url": ""
+        "url": "",
+		"sensorAvailable": false
     },
     "schema": {
         "type": "object",
         "properties": {
             "url": {
+				"type": "string",
                 "required": true
             },
             "password": {
+				"type": "string",
+                "required": false
+            },
+			"sensorAvailable": {
+				"type": "boolean",
+				"default": false
+			},
+            "sensorInterval": {
+				"type": "string",
                 "required": false
             }
         },
@@ -40,6 +51,17 @@
             "password": {
                 "label": "__password__",
 				"helper": "__h_password__",                
+                "required": false
+            },
+			"sensorAvailable": {
+				"type": "checkbox",
+				"rightLabel": "__rl_sensorAvailable__",
+				"helper": "__h_sensorAvailable__",
+                "required": false
+			},
+            "sensorInterval": {
+                "label": "__sensorInterval__",
+				"helper": "__h_sensorInterval__",                
                 "required": false
             }
         }

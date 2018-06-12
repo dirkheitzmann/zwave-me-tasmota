@@ -13,7 +13,6 @@ Currently tested using Sonoff S20 and Sonoff POW.
 For the installation, download and extract the sourcecode and copy the 
 content to /opt/z-way-server/automation/modules (or .../usermodules ) on 
 the Z-WAY-Server.
-
 Follow the usual configuration for WIFI Plugs.
 
 
@@ -27,6 +26,13 @@ Derzeit getestet mit Sonoff S20 und Sonoff POW.
 ### Installation
 
 Zur Installation den Sourcecode runterladen und auf dem Z-WAY-Server unter 
-/opt/z-way-server/automation/modules ablegen (oder ...(usermodules).
+/opt/z-way-server/automation/modules ablegen (oder .../usermodules).
 
 
+## Releases
+
+# 1.1.0
+First version with only using the switch functionality.
+
+# 2.0.0
+Added sensor functionality.
