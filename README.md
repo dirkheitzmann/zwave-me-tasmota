@@ -21,8 +21,6 @@ Follow the usual configuration for WIFI Plugs.
 z-wave-me Modul (z-way) für die Integration von Sonoff WLAN Steckdosen und 
 andere unter der Tasmota Firmware in die z-wave-me HomeAutomation (z-Way).
 
-Derzeit getestet mit Sonoff S20 und Sonoff POW.
-
 ### Installation
 
 Zur Installation den Sourcecode runterladen und auf dem Z-WAY-Server unter 
@@ -36,3 +34,15 @@ First version with only using the switch functionality.
 
 ### 2.0.0
 Added sensor functionality.
+
+
+## Tested devices
+
+Sonoff S20      
+- running Sonoff-Tasmota 5.12.0
+
+Sonoff TH-01 with sensor AM2301    
+- running Sonoff-Tasmota 5.14.0
+
+### Feel free to send me SPONSORED devices for testing, no return
+

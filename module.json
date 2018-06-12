@@ -17,7 +17,10 @@
         "title": "__m_title__",
         "description": "__m_descr__",
         "url": "",
-		"sensorAvailable": false
+		"password": "",
+		"sensorAvailable": false,
+		"sensorInterval": 60,
+		"loglevel": 0
     },
     "schema": {
         "type": "object",
@@ -37,7 +40,11 @@
             "sensorInterval": {
 				"type": "string",
                 "required": false
-            }
+            },
+			"loglevel": {
+				"type": "string",
+				"default": false
+			}
         },
         "required": false
     },
@@ -63,7 +70,12 @@
                 "label": "__sensorInterval__",
 				"helper": "__h_sensorInterval__",                
                 "required": false
-            }
+            },
+			"loglevel": {
+				"label": "__loglevel__",
+				"helper": "__h_loglevel__",
+                "required": false
+			}
         }
     }
 }

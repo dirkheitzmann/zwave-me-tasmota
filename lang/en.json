@@ -6,7 +6,9 @@
 	"password":"Password of the Switch",
 	"h_password":"If Password is configured, else should be empty",
 	"rl_sensorAvailable":"Sensor attached",
-	"h_sensorAvailable":"If a sensor is integrated, respective devices will be automatically created."
+	"h_sensorAvailable":"If a sensor is integrated, respective devices will be automatically created.",
 	"sensorInterval":"Sensor Update interval",
-	"h_sensorInterval":"Sensor values will be updates based on this interval (in seconds, default is 60s)."
+	"h_sensorInterval":"Sensor values will be updates based on this interval (in seconds, default is 60s).",
+	"loglevel":"Log level",
+	"h_loglevel":"Set for more, detailed log messages (off=0, basic=1, more=2, all>=3)"
 }

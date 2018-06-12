@@ -30,9 +30,16 @@ _module = Tasmota;
 Tasmota.prototype.init = function (config) {
 	Tasmota.super_.prototype.init.call(this, config);
 		
-		vDevId = 'Tasmota_' + this.id;
+		this.config = config;
 
-		if (config.password != '') {
+		this.vvvlog('config.title          : ' + config.title); 
+		this.vvvlog('config.url            : ' + config.url); 
+		this.vvvlog('config.password       : ' + config.password); 
+		this.vvvlog('config.sensorAvailable: ' + config.sensorAvailable); 
+		this.vvvlog('config.sensorInterval : ' + config.sensorInterval); 
+		this.vvvlog('config.loglevel       : ' + config.loglevel); 
+		
+		if (undefined === config.password) {
 			this.url = 'http://' + config.url + '/cm?user=admin&password=' + config.password + '&cmnd=Power';
 		} else {
 			this.url = 'http://' + config.url + '/cm?cmnd=Power';;
@@ -46,7 +53,10 @@ Tasmota.prototype.init = function (config) {
 
 		var self = this;
 
+		
 		// Basic funtionality - Switch 
+		vDevId = 'Tasmota_' + this.id;
+
 		this.vDev = this.controller.devices.create({
 			deviceId: vDevId,
 			defaults: {
@@ -68,11 +78,11 @@ Tasmota.prototype.init = function (config) {
 					url: commandurl,
 					async: true,
 					success: function(response) {
-					    console.log(vDevId + ' - response.data.POWER is: ' + response.data.POWER); 
+					    self.log('response.data.POWER is: ' + response.data.POWER); 
 						self.vDev.set('metrics:level', response.data.POWER.toLowerCase());
 					},
 					error: function(response) {
-						console.log(vDevId + ' - ERROR: ' + response.statusText); 
+						self.error(vDevId + ' - ERROR: ' + response.statusText); 
 					} 
 				});
 			},
@@ -80,12 +90,12 @@ Tasmota.prototype.init = function (config) {
 		});
 		
 		// Extended funtionality - Sensors 
-		console.log(vDevId + ' - Sensor - Presence is: ' + config.sensorAvailable); 
+		self.log('Sensor - Presence is: ' + config.sensorAvailable); 
 		if (config.sensorAvailable) {
 		
 			// Prepare Url to fetch Sensor data
 			sensorurl = this.url.replace('=Power','=Status%208');
-			console.log(vDevId + ' - Sensor Init - Using Url: ' + sensorurl); 
+			self.vvlog('Sensor Init - Using Url: ' + sensorurl); 
 
 			// Fetch Sensor data
 			http.request({
@@ -95,22 +105,23 @@ Tasmota.prototype.init = function (config) {
 				success: function(response) {
 				
 					sensorType = Object.keys(response.data.StatusSNS)[1]
-				    console.log(vDevId + ' - Sensor Init - Type is ' + sensorType ); 
-				    console.log(vDevId + ' - Sensor Init - Measure Time: ' + response.data.StatusSNS.Time); 
+				    self.log('Sensor Init - SensorType is ' + sensorType ); 
+				    self.log('Sensor Init - Measure Time: ' + response.data.StatusSNS.Time); 
 					
 					for (sensorKey in response.data.StatusSNS[sensorType]) {
 
-						sensorUnit = self.getSensorUnit(sensorKey);
+						sensorUnit = self.getSensorUnit(sensorKey, response);
+						sensorIcon = self.getSensorIcon(sensorKey, response);
 						
-						console.log(vDevId + ' - Sensor Init - Key ' + sensorKey); 
-						console.log(vDevId + ' - Sensor Init - Val ' + response.data.StatusSNS[sensorType][sensorKey]); 
+						self.log('Sensor Init - Key: ' + sensorKey); 
+						self.log('Sensor Init - Val: ' + response.data.StatusSNS[sensorType][sensorKey]); 
 							
 						self.vDev[sensorKey]= self.controller.devices.create({
 							deviceId: "Tasmota_"+self.id+"_"+sensorKey,
                             defaults: {
                                 deviceType: "sensorMultilevel",
                                 metrics: {
-                                    icon: 'icon.png',
+                                    icon: sensorIcon,
 									level: response.data.StatusSNS[sensorType][sensorKey],
                                     title: "Tasmota ("+self.id+") - "+sensorKey
                                 }
@@ -126,16 +137,23 @@ Tasmota.prototype.init = function (config) {
 					
 				},
 				error: function(response) {
-					console.log(vDevId + ' - Sensor Init - HttpRequest ERROR: ' + response.statusText); 
+					self.error('Sensor Init - HttpRequest ERROR: ' + response.statusText); 
 				} 
 			});
 			
 		
+			self.log('Sensor Init - Update Interval given: ' + config.sensorInterval); 
+			if (undefined === config.sensorInterval) {
+				updateInterval = 60*1000;
+			} else {
+				updateInterval = config.sensorInterval*1000;
+			}
+			self.log('Sensor Init - Update Interval using:  ' + updateInterval); 
 			self.interval = setInterval(function() {
 				self.updateSensor(self);
-			}, 60*1000);
+			}, updateInterval);
 
-			self.updateSensor();
+			//self.updateSensor();
 
 		}
 		
@@ -154,10 +172,10 @@ Tasmota.prototype.stop = function () {
 Tasmota.prototype.updateSensor = function () {
     var self = this;
 	
-	console.log(vDevId + ' - Update Sensor'); 
+	self.log('Updating Sensor values'); 
 
 	sensorurl = this.url.replace('=Power','=Status%208');
-	console.log(vDevId + ' - Update Sensor - Using Url: ' + sensorurl); 
+	self.vvlog('Update Sensor - Using Url: ' + sensorurl); 
 
 	// Fetch Sensor data
 	http.request({
@@ -167,12 +185,12 @@ Tasmota.prototype.updateSensor = function () {
 		success: function(response) {
 		
 			sensorType = Object.keys(response.data.StatusSNS)[1]
-		    console.log(vDevId + ' - Update Sensor - Measure Time ' + response.data.StatusSNS.Time); 
+		    self.vlog('Update Sensor - Measure Time ' + response.data.StatusSNS.Time); 
 			
 			for (sensorKey in response.data.StatusSNS[sensorType]) {
 
-				console.log(vDevId + ' - Update Sensor - key: ' + sensorKey); 
-				console.log(vDevId + ' - Update Sensor - val: ' + response.data.StatusSNS[sensorType][sensorKey]); 
+				self.vlog('Update Sensor - key: ' + sensorKey); 
+				self.vlog('Update Sensor - val: ' + response.data.StatusSNS[sensorType][sensorKey]); 
 				
 				value = response.data.StatusSNS[sensorType][sensorKey];
 				self.vDev[sensorKey].set("metrics:level", value);
@@ -181,19 +199,19 @@ Tasmota.prototype.updateSensor = function () {
 			
 		},
 		error: function(response) {
-			console.log(vDevId + ' - Update Sensor - HttpRequest ERROR: ' + response.statusText); 
+			self.error('Update Sensor - HttpRequest ERROR: ' + response.statusText); 
 		} 
 	});
 
 }
 
-						
-Tasmota.prototype.getSensorUnit = function (mySensorKey) {
-
+Tasmota.prototype.getSensorUnit = function (mySensorKey, myResponse) {
+    var self = this;
+	
 	switch (mySensorKey) {
 	// "AM2301":{"Temperature":21.9,"Humidity":49.5},"TempUnit":"C"}}
 	case 'Temperature' :
-		mySensorUnit = '°' + response.data.StatusSNS.TempUnit;
+		mySensorUnit = '°' + myResponse.data.StatusSNS.TempUnit;
 		//mySensorUnit = '°C';
 		break;
 	case 'Humidity' :
@@ -212,6 +230,9 @@ Tasmota.prototype.getSensorUnit = function (mySensorKey) {
 	case 'Power' :
 		mySensorUnit = 'W';
 		break;
+	case 'Factor' :
+		mySensorUnit = 'x';
+		break;
 	case 'Voltage' :
 		mySensorUnit = 'V';
 		break;
@@ -223,7 +244,91 @@ Tasmota.prototype.getSensorUnit = function (mySensorKey) {
 		mySensorUnit = '?';
 	}
 
-	console.log('Tasmota_' + this.id + ' - Sensor Unit: ' + mySensorUnit); 
+	self.log('Sensor Unit: ' + mySensorUnit); 
 	return mySensorUnit;
 	
 }
+
+Tasmota.prototype.getSensorIcon = function (mySensorKey, myResponse) {
+    var self = this;
+
+	// .../smarthome/storage/img/icons/switch-on.png
+	// .../smarthome/storage/img/icons/temperature.png
+	// .../smarthome/storage/img/icons/humidity.png
+	// .../smarthome/storage/img/icons/meter.png
+	// .../smarthome/storage/img/icons/energy.png
+
+	switch (mySensorKey) {
+	// "AM2301":{"Temperature":21.9,"Humidity":49.5},"TempUnit":"C"}}
+	case 'Temperature' :
+		mySensorIcon = 'temperature.png';
+		break;
+	case 'Humidity' :
+		mySensorIcon = 'humidity.png';
+		break;
+	// "ENERGY":{"Total":0.000,"Yesterday":0.000,"Today":0.000,"Power":0,"Factor":0.00,"Voltage":230,"Current":0.000}}}
+	case 'Total' :
+		mySensorIcon = 'energy.png';
+		break;
+	case 'Yesterday' :
+		mySensorIcon = 'energy.png';
+		break;
+	case 'Today' :
+		mySensorIcon = 'energy.png';
+		break;
+	case 'Power' :
+		mySensorIcon = 'meter.png';
+		break;
+	case 'Factor' :
+		mySensorIcon = 'meter.png';
+		break;
+	case 'Voltage' :
+		mySensorIcon = 'meter.png';
+		break;
+	case 'Current' :
+		mySensorIcon = 'meter.png';
+		break;
+	// unknown
+	default:
+		mySensorIcon = '';
+	}
+
+	self.log('Sensor Icon: ' + mySensorIcon); 
+	return mySensorIcon;
+	
+}
+
+/* Log helper functions */
+
+Tasmota.prototype.log = function(message) {
+    if (undefined === message) return;
+    console.log('['+this.constructor.name+'_'+this.id+'] '+message);
+};
+
+Tasmota.prototype.vlog = function(message) {
+    if (undefined === message) return;
+    if (this.config.loglevel > 0) {
+		console.log('['+this.constructor.name+'_'+this.id+']_1 '+message);
+	}
+};
+
+Tasmota.prototype.vvlog = function(message) {
+    if (undefined === message) return;
+    if (this.config.loglevel > 1) {
+		console.log('['+this.constructor.name+'_'+this.id+']_2 '+message);
+	}
+};
+
+Tasmota.prototype.vvvlog = function(message) {
+    if (undefined === message) return;
+    if (this.config.loglevel > 2) {
+		console.log('['+this.constructor.name+'_'+this.id+']_3 '+message);
+	}
+};
+
+Tasmota.prototype.error = function(message) {
+    if (undefined === message) message = 'An unknown error occured';
+    var error = new Error(message);
+    console.error('['+this.constructor.name+'_'+this.id+'] '+error.stack);
+};
+
