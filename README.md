@@ -31,8 +31,8 @@ Zur Installation den Sourcecode runterladen und auf dem Z-WAY-Server unter
 
 ## Releases
 
-# 1.1.0
+### 1.1.0
 First version with only using the switch functionality.
 
-# 2.0.0
+### 2.0.0
 Added sensor functionality.
