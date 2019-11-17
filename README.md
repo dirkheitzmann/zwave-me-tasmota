@@ -1,7 +1,5 @@
 # zwave-me-tasmota
 
-# THIS IS A FORK FROM https://github.com/dirkheitzmann/zwave-me-tasmota
-
 
 ## EN
 
