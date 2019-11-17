@@ -173,6 +173,22 @@ Tasmota.prototype.updateSensor = function () {
     var self = this;
 	
 	self.log('Updating Sensor values'); 
+	
+	// Fetch switch status (on/off)
+		var commandurl = self.url + self.commands['update];				
+	http.request({
+		method: 'GET',
+		url: commandurl,
+		async: true,
+		success: function(response) {
+			self.log('response.data.POWER is: ' + response.data.POWER); 
+			self.vDev.set('metrics:level', response.data.POWER.toLowerCase());
+		},
+		error: function(response) {
+			self.error(vDevId + ' - ERROR: ' + response.statusText); 
+		} 
+	});
+	
 
 	sensorurl = this.url.replace('=Power','=Status%208');
 	self.vvlog('Update Sensor - Using Url: ' + sensorurl); 
